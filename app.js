@@ -1,9 +1,9 @@
 class Ship {
-    constructor(length) {
+    constructor(length, orientation) {
         this.length = length;
         this.timesHit = 0;
         this.sunk = false;
-        this.orientation = null;
+        this.orientation = orientation;
     }
     hit() {
         this.timesHit++;
@@ -80,7 +80,7 @@ class Gameboard {
     receiveAttack(x, y) {
         if (this.hitBoard[x][y] !== null) {
             return false;
-        } else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === 'false' && this.hitBoard[x][y] === null) {
+        } else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === false && this.hitBoard[x][y] === null) {
             this.shipBoard[x][y].timesHit++;
             this.hitBoard[x][y] = 1;
             return this.shipBoard[x][y].isSunk();
