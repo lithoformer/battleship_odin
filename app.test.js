@@ -28,12 +28,12 @@ test('test gameboard', () => {
     expect(newBoard.createBoard()).toBeInstanceOf(Array);
 })
 
-const board = newBoard.createBoard();
+const shipBoard = newBoard.createBoard();
 
 test('check bad ship placement', () => {
-    expect(newBoard.placeShip(board, 8, 8, 5, 'horizontal')).toBeFalsy();
+    expect(newBoard.placeShip(shipBoard, 8, 8, 5, 'horizontal')).toBeFalsy();
 })
 
 test('check good ship placement', () => {
-    expect(newBoard.placeShip(board, 0, 0, 5, 'horizontal')).toBeTruthy();
+    expect(newBoard.placeShip(shipBoard, 0, 0, 5, 'horizontal')).toBeTruthy();
 })

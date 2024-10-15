@@ -1,5 +1,3 @@
-const { moduleExpression } = require("@babel/types");
-
 class Ship {
     constructor(length) {
         this.length = length;
@@ -24,16 +22,18 @@ class Ship {
 
 class Gameboard {
     constructor() {
-        this.board = [];
+        this.hitBoard = [];
+        this.shipBoard = [];
         this.size = 10;
         this.ships = [];
     }
 
     createBoard() {
+        const board = [];
         for (let i = 0; i < this.size; i++) {
-            this.board[i] = new Array(this.size).fill(null);
+            board[i] = new Array(this.size).fill(null);
         }
-        return this.board;
+        return board;
     }
 
     placeShip(board, x, y, length, orientation) {
@@ -72,6 +72,28 @@ class Gameboard {
                 if (board[x][y + i] !== null) {
                     return false;
                 }
+            }
+        }
+        return true;
+    }
+
+    receiveAttack(x, y) {
+        if (this.hitBoard[x][y] !== null) {
+            return false;
+        } else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === 'false' && this.hitBoard[x][y] === null) {
+            this.shipBoard[x][y].timesHit++;
+            this.hitBoard[x][y] = 1;
+            return this.shipBoard[x][y].isSunk();
+        } else {
+            this.hitBoard[x][y] = 0;
+            return false;
+        }
+    }
+
+    allSunk() {
+        for (item of this.ships) {
+            if (item.sunk === false) {
+                return false;
             }
         }
         return true;
