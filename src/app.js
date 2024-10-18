@@ -100,5 +100,15 @@ class Gameboard {
     }
 }
 
-module.exports.Ship = Ship;
-module.exports.Gameboard = Gameboard;
+
+class Player {
+    constructor() {
+        this.gameBoard = null;
+    }
+}
+
+export { Player, Ship, Gameboard };
+
+// module.exports.Player = Player;
+// module.exports.Ship = Ship;
+// module.exports.Gameboard = Gameboard;

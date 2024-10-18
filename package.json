@@ -14,7 +14,7 @@
   },
   "name": "battleship_odin",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "game.js",
   "dependencies": {
     "ansi-escapes": "^4.3.2",
     "ansi-regex": "^5.0.1",
