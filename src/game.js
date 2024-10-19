@@ -85,17 +85,24 @@ for (let i = 0; i < boardSize; i++) {
         const cell = document.createElement('div');
         cell.classList.add('enemyHitBoardCell');
         enemyHitBoard.appendChild(cell);
-        cell.addEventListener('click', function (event) {
+        cell.addEventListener('click', function () {
             cpu.gameBoard.receiveAttack(i, j);
             if (cpu.gameBoard.hitBoard[i][j] === 0) {
-                cell.style.backgroundColor = 'white';
+                cell.style.transition = '1s';
+                cell.style.opacity = '0.5';
             }
             else if (cpu.gameBoard.hitBoard[i][j] === 1) {
+                cell.style.transition = '1s';
                 cell.style.backgroundColor = 'red'
             }
             else if (cpu.gameBoard.hitBoard[i][j] === null) {
+                cell.style.transition = '1s';
                 cell.style.backgroundColor = 'lightblue'
             }
+            if (cpu.gameBoard.allSunk()) {
+                endGame();
+            }
+            else { cpuAttack(); }
         });
 
         if (cpu.gameBoard.hitBoard[i][j] === 0) {
@@ -108,4 +115,28 @@ for (let i = 0; i < boardSize; i++) {
             cell.style.backgroundColor = 'lightblue'
         }
     }
+}
+
+const cpuAttack = () => {
+    let x;
+    let y;
+    do {
+        x = Math.floor(Math.random() * boardSize);
+        y = Math.floor(Math.random() * boardSize);
+    } while (player.gameBoard.receiveAttack(x, y) === false);
+    const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
+    if (player.gameBoard.hitBoard[x][y] === 1) {
+        myShipBoardCells[x * 10 + y].style.backgroundColor = 'red';
+        myShipBoardCells[x * 10 + y].style.transition = '1s';
+    }
+    else {
+        myShipBoardCells[x * 10 + y].style.opacity = '0.5';
+        myShipBoardCells[x * 10 + y].style.transition = '1s';
+    }
+    if (player.gameBoard.allSunk()) {
+        endGame();
+    }
+}
+
+const endGame = () => {
 }

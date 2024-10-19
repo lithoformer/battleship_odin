@@ -45,7 +45,7 @@ class Gameboard {
         }
         else if (this.checkPlacement(board, x, y, length, orientation)) {
             const newShip = new Ship(length, orientation);
-            this.ships.push[newShip];
+            this.ships.push(newShip);
             for (let i = 0; i < length; i++) {
                 if (orientation === 'horizontal') {
                     board[x + i][y] = newShip;
@@ -83,23 +83,23 @@ class Gameboard {
         } else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === false && this.hitBoard[x][y] === null) {
             this.shipBoard[x][y].timesHit++;
             this.hitBoard[x][y] = 1;
-            return this.shipBoard[x][y].isSunk();
+            this.shipBoard[x][y].isSunk();
+            return true;
         } else {
             this.hitBoard[x][y] = 0;
-            return false;
+            return true;
         }
     }
 
     allSunk() {
-        for (item of this.ships) {
-            if (item.sunk === false) {
+        for (const item of this.ships) {
+            if (!item.sunk) {
                 return false;
             }
         }
         return true;
     }
 }
-
 
 class Player {
     constructor() {
