@@ -91,18 +91,19 @@ for (let i = 0; i < boardSize; i++) {
         enemyHitBoard.appendChild(cell);
         cell.addEventListener('click', () => {
             if (cpu.gameBoard.receiveAttack(i, j) === true) {
-                status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
                 if (cpu.gameBoard.hitBoard[i][j] === 0) {
+                    status.textContent = 'MISS!';
                     cell.style.transition = '1s';
                     cell.style.opacity = '0.5';
                 }
                 else if (cpu.gameBoard.hitBoard[i][j] === 1) {
                     cell.style.transition = '1s';
                     cell.style.backgroundColor = 'red'
-                }
-                else if (cpu.gameBoard.hitBoard[i][j] === null) {
-                    cell.style.transition = '1s';
-                    cell.style.backgroundColor = 'lightblue'
+                    if (cpu.gameBoard.shipBoard[i][j].sunk === true) {
+                        status.textContent = 'HIT! SHIP SUNK!';
+                    } else {
+                        status.textContent = 'HIT!';
+                    }
                 }
                 if (cpu.gameBoard.allSunk()) {
                     endGame('player');
