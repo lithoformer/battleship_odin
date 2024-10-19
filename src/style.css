@@ -22,12 +22,12 @@
 
 .title {
     text-align: center;
-    font-size: 80px;
+    font-size: 50px;
 }
 
 .status {
     text-align: center;
-    font-size: 50px;
+    font-size: 30px;
 }
 
 .myShipBoard,
@@ -36,9 +36,16 @@
     flex-wrap: wrap;
     min-width: 25vw;
     min-height: 25vw;
-    margin: 150px;
     width: 25vw;
     height: 25vw;
+}
+
+.myShipBoard {
+    margin: 1vw 0 200px 0;
+}
+
+.enemyHitBoard {
+    margin: 1vw 0 0 200px;
 }
 
 .myShipBoardCell,
