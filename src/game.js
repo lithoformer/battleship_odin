@@ -51,6 +51,10 @@ const title = document.createElement('h1');
 title.classList.add('title');
 outer.appendChild(title);
 title.textContent = `BATTLESHIP`;
+const status = document.createElement('div');
+status.classList.add('status');
+outer.appendChild(status);
+status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
 
 const gameContainer = document.createElement('div');
 gameContainer.classList.add('gameContainer');
@@ -85,24 +89,28 @@ for (let i = 0; i < boardSize; i++) {
         const cell = document.createElement('div');
         cell.classList.add('enemyHitBoardCell');
         enemyHitBoard.appendChild(cell);
-        cell.addEventListener('click', function () {
-            cpu.gameBoard.receiveAttack(i, j);
-            if (cpu.gameBoard.hitBoard[i][j] === 0) {
-                cell.style.transition = '1s';
-                cell.style.opacity = '0.5';
+        cell.addEventListener('click', () => {
+            if (cpu.gameBoard.receiveAttack(i, j) === true) {
+                status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
+                if (cpu.gameBoard.hitBoard[i][j] === 0) {
+                    cell.style.transition = '1s';
+                    cell.style.opacity = '0.5';
+                }
+                else if (cpu.gameBoard.hitBoard[i][j] === 1) {
+                    cell.style.transition = '1s';
+                    cell.style.backgroundColor = 'red'
+                }
+                else if (cpu.gameBoard.hitBoard[i][j] === null) {
+                    cell.style.transition = '1s';
+                    cell.style.backgroundColor = 'lightblue'
+                }
+                if (cpu.gameBoard.allSunk()) {
+                    endGame('player');
+                }
+                else { cpuAttack(); }
+            } else {
+                status.textContent = 'INVALID MOVE! TRY AGAIN!';
             }
-            else if (cpu.gameBoard.hitBoard[i][j] === 1) {
-                cell.style.transition = '1s';
-                cell.style.backgroundColor = 'red'
-            }
-            else if (cpu.gameBoard.hitBoard[i][j] === null) {
-                cell.style.transition = '1s';
-                cell.style.backgroundColor = 'lightblue'
-            }
-            if (cpu.gameBoard.allSunk()) {
-                endGame();
-            }
-            else { cpuAttack(); }
         });
 
         if (cpu.gameBoard.hitBoard[i][j] === 0) {
@@ -134,9 +142,17 @@ const cpuAttack = () => {
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
     if (player.gameBoard.allSunk()) {
-        endGame();
+        endGame('cpu');
     }
 }
 
-const endGame = () => {
+const endGame = (winner) => {
+    if (winner === 'player') {
+        status.textContent = 'GAME OVER! PLAYER WINS!';
+    }
+    else if (winner === 'cpu') {
+        status.textContent = 'GAME OVER! CPU WINS!';
+    }
+    myShipBoard.style.visibility = 'collapse';
+    enemyHitBoard.style.visibility = 'collapse';
 }

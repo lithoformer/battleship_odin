@@ -25,6 +25,11 @@
     font-size: 80px;
 }
 
+.status {
+    text-align: center;
+    font-size: 50px;
+}
+
 .myShipBoard,
 .enemyHitBoard {
     display: flex;
