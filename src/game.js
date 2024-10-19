@@ -1,6 +1,9 @@
 import { Ship, Gameboard, Player } from './app.js';
 import "./style.css";
 
+const boardSize = 10;
+const cpuHit = [];
+
 const player = new Player();
 player.gameBoard = new Gameboard();
 player.gameBoard.hitBoard = player.gameBoard.createBoard();
@@ -27,20 +30,19 @@ cpu.gameBoard = new Gameboard();
 cpu.gameBoard.hitBoard = cpu.gameBoard.createBoard();
 cpu.gameBoard.shipBoard = cpu.gameBoard.createBoard();
 
-if (cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, 0, 0, 5, 'horizontal')) {
-    console.log('successfully placed ship');
-}
-if (cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, 1, 1, 4, 'vertical')) {
-    console.log('successfully placed ship');
-}
-if (cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, 6, 6, 3, 'vertical')) {
-    console.log('successfully placed ship');
-}
-if (cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, 5, 4, 2, 'horizontal')) {
-    console.log('successfully placed ship');
-}
-if (cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, 3, 3, 1, 'horizontal')) {
-    console.log('successfully placed ship');
+for (let i = 1; i < 6; i++) {
+    let orientation;
+    let success = false;
+    do {
+        const orient = Math.floor(Math.random() * 2);
+        if (orient === 1) {
+            orientation = 'horizontal'
+        }
+        else {
+            orientation = 'vertical';
+        }
+        success = cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, Math.floor(Math.random() * boardSize), Math.floor(Math.random() * boardSize), i, orientation);
+    } while (!success);
 }
 
 const body = document.querySelector('body');
@@ -59,9 +61,6 @@ status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
 const gameContainer = document.createElement('div');
 gameContainer.classList.add('gameContainer');
 outer.appendChild(gameContainer);
-
-const boardSize = 10;
-const cpuHit = [];
 
 const myShipBoard = document.createElement('div');
 myShipBoard.classList.add('myShipBoard');
