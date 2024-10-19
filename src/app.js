@@ -78,9 +78,13 @@ class Gameboard {
     }
 
     receiveAttack(x, y) {
-        if (this.hitBoard[x][y] !== null) {
+        if (x === null || y === null) {
             return false;
-        } else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === false && this.hitBoard[x][y] === null) {
+        }
+        else if (this.hitBoard[x][y] !== null) {
+            return false;
+        }
+        else if (this.shipBoard[x][y] instanceof Ship && this.shipBoard[x][y].sunk === false && this.hitBoard[x][y] === null) {
             this.shipBoard[x][y].timesHit++;
             this.hitBoard[x][y] = 1;
             this.shipBoard[x][y].isSunk();

@@ -61,6 +61,7 @@ gameContainer.classList.add('gameContainer');
 outer.appendChild(gameContainer);
 
 const boardSize = 10;
+const cpuHit = [];
 
 const myShipBoard = document.createElement('div');
 myShipBoard.classList.add('myShipBoard');
@@ -108,7 +109,7 @@ for (let i = 0; i < boardSize; i++) {
                 if (cpu.gameBoard.allSunk()) {
                     endGame('player');
                 }
-                else { cpuAttack(); }
+                else { cpuAttack(cpuHit); }
             } else {
                 status.textContent = 'INVALID MOVE! TRY AGAIN!';
             }
@@ -126,15 +127,46 @@ for (let i = 0; i < boardSize; i++) {
     }
 }
 
-const cpuAttack = () => {
-    let x;
-    let y;
+const cpuAttack = (cpuHit) => {
+    let x = null;
+    let y = null;
+    let AIhit = false;
     do {
-        x = Math.floor(Math.random() * boardSize);
-        y = Math.floor(Math.random() * boardSize);
-    } while (player.gameBoard.receiveAttack(x, y) === false);
+        if (cpuHit.length === 0) {
+            break;
+        }
+        else {
+            const AIcoords = cpuHit.shift();
+            x = AIcoords[0];
+            y = AIcoords[1];
+            AIhit = player.gameBoard.receiveAttack(x, y);
+        }
+    } while (!AIhit);
+    if (!AIhit) {
+        do {
+            x = Math.floor(Math.random() * boardSize);
+            y = Math.floor(Math.random() * boardSize);
+        } while (player.gameBoard.receiveAttack(x, y) === false);
+    }
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
-    if (player.gameBoard.hitBoard[x][y] === 1) {
+    if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].sunk === false) {
+        if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null) {
+            cpuHit.push([x - 1, y]);
+        }
+        if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null) {
+            cpuHit.push([x + 1, y]);
+        }
+        if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null) {
+            cpuHit.push([x, y - 1]);
+        }
+        if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null) {
+            cpuHit.push([x, y + 1]);
+        }
+        myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
+        myShipBoardCells[x * boardSize + y].style.transition = '1s';
+    }
+    else if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].sunk === true) {
+        cpuHit.splice(0, cpuHit.length);
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
@@ -154,6 +186,6 @@ const endGame = (winner) => {
     else if (winner === 'cpu') {
         status.textContent = 'GAME OVER! CPU WINS!';
     }
-    myShipBoard.style.visibility = 'collapse';
-    enemyHitBoard.style.visibility = 'collapse';
+    myShipBoard.style.visibility = 'hidden';
+    enemyHitBoard.style.visibility = 'hidden';
 }
