@@ -29,9 +29,11 @@
 .enemyHitBoard {
     display: flex;
     flex-wrap: wrap;
+    min-width: 25vw;
+    min-height: 25vw;
+    margin: 150px;
     width: 25vw;
     height: 25vw;
-    margin: 150px;
 }
 
 .myShipBoardCell,
