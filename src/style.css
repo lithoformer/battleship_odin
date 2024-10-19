@@ -29,15 +29,16 @@
 .enemyHitBoard {
     display: flex;
     flex-wrap: wrap;
-    max-width: 500px;
-    max-height: 500px;
+    width: 25vw;
+    height: 25vw;
     margin: 150px;
 }
 
 .myShipBoardCell,
 .enemyHitBoardCell {
-    width: 48px;
-    height: 48px;
+    width: calc(25vw / 10);
+    height: calc(25vw / 10);
     border: 1px solid black;
+    box-sizing: border-box;
     cursor: pointer;
 }

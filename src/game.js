@@ -126,12 +126,12 @@ const cpuAttack = () => {
     } while (player.gameBoard.receiveAttack(x, y) === false);
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
     if (player.gameBoard.hitBoard[x][y] === 1) {
-        myShipBoardCells[x * 10 + y].style.backgroundColor = 'red';
-        myShipBoardCells[x * 10 + y].style.transition = '1s';
+        myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
+        myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
     else {
-        myShipBoardCells[x * 10 + y].style.opacity = '0.5';
-        myShipBoardCells[x * 10 + y].style.transition = '1s';
+        myShipBoardCells[x * boardSize + y].style.opacity = '0.5';
+        myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
     if (player.gameBoard.allSunk()) {
         endGame();
