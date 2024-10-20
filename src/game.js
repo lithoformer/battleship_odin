@@ -2,7 +2,9 @@ import { Ship, Gameboard, Player } from './app.js';
 import "./style.css";
 
 const boardSize = 10;
-const cpuHit = [];
+const cpuHits = [];
+const cpuAttacks = [];
+let orientation = null;
 
 const player = new Player();
 player.gameBoard = new Gameboard();
@@ -200,7 +202,7 @@ for (let i = 0; i < boardSize; i++) {
                 if (cpu.gameBoard.allSunk()) {
                     endGame('player');
                 }
-                else { cpuAttack(cpuHit); }
+                else { cpuAttack(cpuAttacks, cpuHits); }
             } else {
                 status.textContent = 'INVALID MOVE! TRY AGAIN!';
             }
@@ -218,16 +220,16 @@ for (let i = 0; i < boardSize; i++) {
     }
 }
 
-const cpuAttack = (cpuHit) => {
+const cpuAttack = (cpuAttacks, cpuHits) => {
     let x = null;
     let y = null;
     let AIhit = false;
     do {
-        if (cpuHit.length === 0) {
+        if (cpuAttacks.length === 0) {
             break;
         }
         else {
-            const AIcoords = cpuHit.shift();
+            const AIcoords = cpuAttacks.shift();
             x = AIcoords[0];
             y = AIcoords[1];
             AIhit = player.gameBoard.receiveAttack(x, y);
@@ -241,23 +243,53 @@ const cpuAttack = (cpuHit) => {
     }
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
     if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === false) {
-        if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null) {
-            cpuHit.push([x - 1, y]);
+        cpuHits.push([x, y]);
+        if (cpuHits.length > 1) {
+            console.log(cpuHits);
+            for (const hit1 of cpuHits) {
+                for (const hit2 of cpuHits) {
+                    if (hit1[0] === hit2[0]) {
+                        orientation = 'horizontal';
+                    }
+                    if (hit1[1] === hit2[1]) {
+                        orientation = 'vertical';
+                    }
+                }
+            }
         }
-        if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null) {
-            cpuHit.push([x + 1, y]);
+        console.log(orientation);
+
+        if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && orientation && orientation === 'vertical') {
+            cpuAttacks.push([x - 1, y]);
         }
-        if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null) {
-            cpuHit.push([x, y - 1]);
+        else if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && !orientation) {
+            cpuAttacks.push([x - 1, y]);
         }
-        if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null) {
-            cpuHit.push([x, y + 1]);
+        if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && orientation && orientation === 'vertical') {
+            cpuAttacks.push([x + 1, y]);
+        }
+        else if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && !orientation) {
+            cpuAttacks.push([x + 1, y]);
+        }
+        if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && orientation && orientation === 'horizontal') {
+            cpuAttacks.push([x, y - 1]);
+        }
+        else if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && !orientation) {
+            cpuAttacks.push([x, y - 1]);
+        }
+        if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && orientation && orientation === 'horizontal') {
+            cpuAttacks.push([x, y + 1]);
+        }
+        else if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && !orientation) {
+            cpuAttacks.push([x, y + 1]);
         }
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
     else if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === true) {
-        cpuHit.splice(0, cpuHit.length);
+        cpuAttacks.splice(0, cpuAttacks.length);
+        cpuHits.splice(0, cpuHits.length);
+        orientation = null;
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
