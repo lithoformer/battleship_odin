@@ -75,7 +75,6 @@ html {
     z-index: auto;
     position: absolute;
     display: flex;
-    touch-action: none;
 }
 
 .shipDiv {
