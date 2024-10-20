@@ -34,6 +34,7 @@ html {
 
 .myShipBoard,
 .enemyHitBoard {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     min-width: 20vw;
@@ -54,9 +55,54 @@ html {
 
 .myShipBoardCell,
 .enemyHitBoardCell {
+    z-index: auto;
     width: calc(20vw / 10);
     height: calc(20vw / 10);
     border: 1px solid black;
     box-sizing: border-box;
     cursor: pointer;
+}
+
+/* 
+.shipContainer {
+    background-color: cadetblue;
+    width: 20vw;
+    height: 20vw;
+    margin: 1vw 0 0 5vw;
+} */
+
+.ship {
+    z-index: auto;
+    position: absolute;
+    display: flex;
+}
+
+.shipDiv {
+    z-index: auto;
+    width: calc(20vw / 10);
+    height: calc(20vw / 10);
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.dragging {
+    opacity: 0.5;
+}
+
+.dragover {
+    opacity: 0.5;
+}
+
+.btn {
+    width: 5vw;
+    height: 5vw;
+    border-radius: 50vw;
+    background-color: red;
+    color: white;
+    margin: 5vw 0 0 15vw;
+}
+
+.normal {
+    background-color: slategray;
+    transition: 1s;
 }

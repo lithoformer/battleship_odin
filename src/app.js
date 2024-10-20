@@ -37,24 +37,24 @@ class Gameboard {
     }
 
     placeShip(board, x, y, length, orientation) {
-        if (x + length > this.size && orientation === 'horizontal') {
+        if (x + length > this.size && orientation === 'vertical') {
             return false;
         }
-        else if (y + length > this.size && orientation === 'vertical') {
+        else if (y + length > this.size && orientation === 'horizontal') {
             return false;
         }
         else if (this.checkPlacement(board, x, y, length, orientation)) {
             const newShip = new Ship(length, orientation);
             this.ships.push(newShip);
             for (let i = 0; i < length; i++) {
-                if (orientation === 'horizontal') {
+                if (orientation === 'vertical') {
                     board[x + i][y] = newShip;
                 }
-                else if (orientation === 'vertical') {
+                else if (orientation === 'horizontal') {
                     board[x][y + i] = newShip;
                 }
             }
-            return newShip;
+            return true;
         }
         else {
             return false;
@@ -63,13 +63,19 @@ class Gameboard {
 
     checkPlacement(board, x, y, length, orientation) {
         for (let i = 0; i < length; i++) {
-            if (orientation === 'horizontal') {
-                if (board[x + i][y] !== null) {
+            if (orientation === 'vertical') {
+                if (board[x + i] === undefined) {
+                    return false;
+                }
+                else if (board[x + i][y] !== null) {
                     return false;
                 }
             }
-            else if (orientation === 'vertical') {
-                if (board[x][y + i] !== null) {
+            else if (orientation === 'horizontal') {
+                if (board[x] === undefined) {
+                    return false;
+                }
+                else if (board[x][y + i] !== null) {
                     return false;
                 }
             }
