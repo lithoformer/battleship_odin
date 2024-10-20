@@ -128,6 +128,7 @@ for (let i = 5; i > 0; i--) {
 
 startBtn.addEventListener('click', () => {
     player.gameBoard.shipBoard = player.gameBoard.createBoard();
+    player.gameBoard.ships.splice(0, player.gameBoard.ships.length);
     let begin = [];
     let orientation = '';
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
@@ -190,7 +191,7 @@ for (let i = 0; i < boardSize; i++) {
                 else if (cpu.gameBoard.hitBoard[i][j] === 1) {
                     cell.style.transition = '1s';
                     cell.style.backgroundColor = 'red'
-                    if (cpu.gameBoard.shipBoard[i][j].sunk === true) {
+                    if (cpu.gameBoard.shipBoard[i][j].isSunk() === true) {
                         status.textContent = 'HIT! SHIP SUNK!';
                     } else {
                         status.textContent = 'HIT!';
@@ -239,7 +240,7 @@ const cpuAttack = (cpuHit) => {
         } while (player.gameBoard.receiveAttack(x, y) === false);
     }
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
-    if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].sunk === false) {
+    if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === false) {
         if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null) {
             cpuHit.push([x - 1, y]);
         }
@@ -255,7 +256,7 @@ const cpuAttack = (cpuHit) => {
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
-    else if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].sunk === true) {
+    else if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === true) {
         cpuHit.splice(0, cpuHit.length);
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
