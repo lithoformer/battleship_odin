@@ -63,14 +63,6 @@ html {
     cursor: pointer;
 }
 
-/* 
-.shipContainer {
-    background-color: cadetblue;
-    width: 20vw;
-    height: 20vw;
-    margin: 1vw 0 0 5vw;
-} */
-
 .ship {
     z-index: auto;
     position: absolute;
@@ -99,7 +91,7 @@ html {
     border-radius: 50vw;
     background-color: red;
     color: white;
-    margin: 5vw 0 0 15vw;
+    margin: 5vw 0 0 10vw;
 }
 
 .normal {

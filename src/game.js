@@ -7,23 +7,6 @@ const cpuHit = [];
 const player = new Player();
 player.gameBoard = new Gameboard();
 player.gameBoard.hitBoard = player.gameBoard.createBoard();
-// player.gameBoard.shipBoard = player.gameBoard.createBoard();
-
-// if (player.gameBoard.placeShip(player.gameBoard.shipBoard, 3, 4, 5, 'horizontal')) {
-//     console.log('successfully placed ship');
-// }
-// if (player.gameBoard.placeShip(player.gameBoard.shipBoard, 0, 0, 4, 'vertical')) {
-//     console.log('successfully placed ship');
-// }
-// if (player.gameBoard.placeShip(player.gameBoard.shipBoard, 6, 6, 3, 'horizontal')) {
-//     console.log('successfully placed ship');
-// }
-// if (player.gameBoard.placeShip(player.gameBoard.shipBoard, 1, 1, 2, 'vertical')) {
-//     console.log('successfully placed ship');
-// }
-// if (player.gameBoard.placeShip(player.gameBoard.shipBoard, 8, 8, 1, 'horizontal')) {
-//     console.log('successfully placed ship');
-// }
 
 const cpu = new Player();
 cpu.gameBoard = new Gameboard();
@@ -145,7 +128,7 @@ for (let i = 5; i > 0; i--) {
 
 startBtn.addEventListener('click', () => {
     player.gameBoard.shipBoard = player.gameBoard.createBoard();
-    let begin = true;
+    let begin = [];
     let orientation = '';
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
     for (let i = 0; i < myShipBoardCells.length; i++) {
@@ -160,16 +143,16 @@ startBtn.addEventListener('click', () => {
                 orientation = 'vertical';
             }
             const length = ship.childNodes.length;
-            if (player.gameBoard.checkPlacement(player.gameBoard.shipBoard, x, y, length, orientation) === false) {
+            if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation) === false) {
                 status.textContent = 'INVALID SHIP POSITION!';
-                begin = false;
+                begin.push(false);
             }
             else if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation)) {
-                begin = true;
+                begin.push(true);
             }
         }
     }
-    if (begin) {
+    if (!begin.includes(false)) {
         for (let i = 0; i < myShipBoardCells.length; i++) {
             const y = i % 10;
             const x = Math.floor(i / 10);
