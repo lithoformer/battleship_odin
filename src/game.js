@@ -4,7 +4,7 @@ import "./style.css";
 const boardSize = 10;
 const cpuHits = [];
 const cpuAttacks = [];
-let orientation = null;
+let AIdata = { coords: null, orientation: null };
 
 const player = new Player();
 player.gameBoard = new Gameboard();
@@ -245,42 +245,46 @@ const cpuAttack = (cpuAttacks, cpuHits) => {
     if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === false) {
         cpuHits.push([x, y]);
         if (cpuHits.length > 1) {
-            console.log(cpuHits);
             for (const hit1 of cpuHits) {
                 for (const hit2 of cpuHits) {
-                    if (hit1[0] === hit2[0]) {
-                        orientation = 'horizontal';
+                    if (hit1[0] === hit2[0] && hit1 !== hit2) {
+                        AIdata.orientation = 'horizontal';
+                        AIdata.coords = hit1[0];
                     }
-                    if (hit1[1] === hit2[1]) {
-                        orientation = 'vertical';
+                    if (hit1[1] === hit2[1] && hit1 !== hit2) {
+                        AIdata.orientation = 'vertical';
+                        AIdata.coords = hit1[1];
                     }
                 }
             }
         }
-        console.log(orientation);
 
-        if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && orientation && orientation === 'vertical') {
+        if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && AIdata.orientation && AIdata.orientation === 'vertical') {
+            cpuAttacks.push([x - 1, y]);
+            cpuAttacks.splice(0, cpuAttacks.length, ...cpuAttacks.filter((attack) => attack[1] === AIdata.coords));
+        }
+        else if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && AIdata.orientation === null) {
             cpuAttacks.push([x - 1, y]);
         }
-        else if (x - 1 >= 0 && player.gameBoard.hitBoard[x - 1][y] === null && !orientation) {
-            cpuAttacks.push([x - 1, y]);
+        if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && AIdata.orientation && AIdata.orientation === 'vertical') {
+            cpuAttacks.push([x + 1, y]);
+            cpuAttacks.splice(0, cpuAttacks.length, ...cpuAttacks.filter((attack) => attack[1] === AIdata.coords));
         }
-        if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && orientation && orientation === 'vertical') {
+        else if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && AIdata.orientation === null) {
             cpuAttacks.push([x + 1, y]);
         }
-        else if (x + 1 < boardSize && player.gameBoard.hitBoard[x + 1][y] === null && !orientation) {
-            cpuAttacks.push([x + 1, y]);
+        if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && AIdata.orientation && AIdata.orientation === 'horizontal') {
+            cpuAttacks.push([x, y - 1]);
+            cpuAttacks.splice(0, cpuAttacks.length, ...cpuAttacks.filter((attack) => attack[0] === AIdata.coords));
         }
-        if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && orientation && orientation === 'horizontal') {
+        else if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && AIdata.orientation === null) {
             cpuAttacks.push([x, y - 1]);
         }
-        else if (y - 1 >= 0 && player.gameBoard.hitBoard[x][y - 1] === null && !orientation) {
-            cpuAttacks.push([x, y - 1]);
-        }
-        if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && orientation && orientation === 'horizontal') {
+        if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && AIdata.orientation && AIdata.orientation === 'horizontal') {
             cpuAttacks.push([x, y + 1]);
+            cpuAttacks.splice(0, cpuAttacks.length, ...cpuAttacks.filter((attack) => attack[0] === AIdata.coords));
         }
-        else if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && !orientation) {
+        else if (y + 1 < boardSize && player.gameBoard.hitBoard[x][y + 1] === null && AIdata.orientation === null) {
             cpuAttacks.push([x, y + 1]);
         }
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
@@ -289,7 +293,8 @@ const cpuAttack = (cpuAttacks, cpuHits) => {
     else if (player.gameBoard.hitBoard[x][y] === 1 && player.gameBoard.shipBoard[x][y].isSunk() === true) {
         cpuAttacks.splice(0, cpuAttacks.length);
         cpuHits.splice(0, cpuHits.length);
-        orientation = null;
+        AIdata.orientation = null;
+        AIdata.coords = null;
         myShipBoardCells[x * boardSize + y].style.backgroundColor = 'red';
         myShipBoardCells[x * boardSize + y].style.transition = '1s';
     }
