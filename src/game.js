@@ -131,7 +131,7 @@ for (let i = 5; i > 0; i--) {
     ship.addEventListener('dragend', () => {
         ship.classList.remove('dragging');
     });
-    ship.addEveltListener('touchend', () => {
+    ship.addEventListener('touchend', () => {
         ship.classList.remove('dragging');
     })
 
