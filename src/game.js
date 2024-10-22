@@ -98,25 +98,42 @@ for (let i = 5; i > 0; i--) {
         shipDiv.classList.add('normal');
         shipDiv.addEventListener('drag', () => {
         });
+        shipDiv.addEventListener('touchmove', () => {
+        });
         shipDiv.addEventListener('dragstart', () => {
             shipDiv.classList.add('dragging');
         });
+        shipDiv.addEventListener('touchstart', () => {
+            shipDiv.classList.add('dragging');
+        })
         shipDiv.addEventListener('dragend', () => {
             shipDiv.classList.remove('dragging');
         });
+        shipDiv.addEventListener('touchend', () => {
+            shipDiv.classList.remove('dragging');
+        })
         ship.appendChild(shipDiv);
     }
     ship.addEventListener('drag', () => {
+    });
+    ship.addEventListener('touchmove', () => {
     });
 
     ship.addEventListener('dragstart', () => {
         dragged = ship;
         ship.classList.add('dragging');
     });
+    ship.addEventListener('touchstart', () => {
+        dragged = ship;
+        ship.classList.add('dragging');
+    })
 
     ship.addEventListener('dragend', () => {
         ship.classList.remove('dragging');
     });
+    ship.addEveltListener('touchend', () => {
+        ship.classList.remove('dragging');
+    })
 
     ship.addEventListener('dblclick', () => {
         if (ship.style.flexDirection === 'column') {
