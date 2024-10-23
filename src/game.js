@@ -1,29 +1,6 @@
+import { rest } from 'lodash';
 import { Computer, Ship, Gameboard, Player } from './app.js';
 import "./style.css"
-
-const player = new Player();
-player.gameBoard = new Gameboard();
-player.gameBoard.hitBoard = player.gameBoard.createBoard();
-
-const cpu = new Computer();
-cpu.gameBoard = new Gameboard();
-cpu.gameBoard.hitBoard = cpu.gameBoard.createBoard();
-cpu.gameBoard.shipBoard = cpu.gameBoard.createBoard();
-
-for (let i = 1; i < 6; i++) {
-    let orientation;
-    let success = false;
-    do {
-        const orient = Math.floor(Math.random() * 2);
-        if (orient === 1) {
-            orientation = 'horizontal'
-        }
-        else {
-            orientation = 'vertical';
-        }
-        success = cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, Math.floor(Math.random() * cpu.gameBoard.size), Math.floor(Math.random() * cpu.gameBoard.size), i, orientation);
-    } while (!success);
-}
 
 const body = document.querySelector('body');
 const outer = document.createElement('div');
@@ -55,94 +32,14 @@ const enemyHitBoard = document.createElement('div');
 enemyHitBoard.classList.add('enemyHitBoard');
 gameContainer.appendChild(enemyHitBoard);
 
-for (let i = 0; i < player.gameBoard.size; i++) {
-    for (let j = 0; j < player.gameBoard.size; j++) {
-        const cell = document.createElement('div');
-        cell.classList.add('myShipBoardCell');
-        cell.classList.add('dropZone');
-        cell.addEventListener('dragover', (event) => {
-            event.preventDefault();
-        }, false);
-        cell.addEventListener('dragenter', (event) => {
-            if (event.target.classList.contains('dropZone')) {
-                event.target.classList.add('dragover');
-            }
-        });
-        cell.addEventListener('dragleave', (event) => {
-            if (event.target.classList.contains('dropZone')) {
-                event.target.classList.remove('dragover');
-            }
-        });
-        cell.addEventListener('drop', (event) => {
-            event.preventDefault();
-            if (event.target.classList.contains('dropZone')) {
-                event.target.classList.remove('dragover');
-                event.target.appendChild(dragged);
-            }
-        });
-        myShipBoard.appendChild(cell);
-    }
-}
+const player = new Player();
+player.gameBoard = new Gameboard();
+player.gameBoard.hitBoard = player.gameBoard.createBoard();
 
-let dragged;
-
-for (let i = 5; i > 0; i--) {
-    const ship = document.createElement('div');
-    ship.draggable = 'true';
-    ship.classList.add('ship');
-    myShipBoard.appendChild(ship);
-    for (let j = 0; j < i; j++) {
-        const shipDiv = document.createElement('div');
-        shipDiv.classList.add('shipDiv');
-        shipDiv.classList.add('normal');
-        shipDiv.addEventListener('drag', () => {
-        });
-        shipDiv.addEventListener('touchmove', () => {
-        });
-        shipDiv.addEventListener('dragstart', () => {
-            shipDiv.classList.add('dragging');
-        });
-        shipDiv.addEventListener('touchstart', () => {
-            shipDiv.classList.add('dragging');
-        })
-        shipDiv.addEventListener('dragend', () => {
-            shipDiv.classList.remove('dragging');
-        });
-        shipDiv.addEventListener('touchend', () => {
-            shipDiv.classList.remove('dragging');
-        })
-        ship.appendChild(shipDiv);
-    }
-    ship.addEventListener('drag', () => {
-    });
-    ship.addEventListener('touchmove', () => {
-    });
-
-    ship.addEventListener('dragstart', () => {
-        dragged = ship;
-        ship.classList.add('dragging');
-    });
-    ship.addEventListener('touchstart', () => {
-        dragged = ship;
-        ship.classList.add('dragging');
-    })
-
-    ship.addEventListener('dragend', () => {
-        ship.classList.remove('dragging');
-    });
-    ship.addEventListener('touchend', () => {
-        ship.classList.remove('dragging');
-    })
-
-    ship.addEventListener('dblclick', () => {
-        if (ship.style.flexDirection === 'column') {
-            ship.style.flexDirection = 'row';
-        }
-        else {
-            ship.style.flexDirection = 'column';
-        }
-    });
-}
+const cpu = new Computer();
+cpu.gameBoard = new Gameboard();
+cpu.gameBoard.hitBoard = cpu.gameBoard.createBoard();
+cpu.gameBoard.shipBoard = cpu.gameBoard.createBoard();
 
 startBtn.addEventListener('click', () => {
     player.gameBoard.shipBoard = player.gameBoard.createBoard();
@@ -232,6 +129,112 @@ startBtn.addEventListener('click', () => {
     }
 });
 
+function restart() {
+    for (let i = 1; i < 6; i++) {
+        let orientation;
+        let success = false;
+        do {
+            const orient = Math.floor(Math.random() * 2);
+            if (orient === 1) {
+                orientation = 'horizontal'
+            }
+            else {
+                orientation = 'vertical';
+            }
+            success = cpu.gameBoard.placeShip(cpu.gameBoard.shipBoard, Math.floor(Math.random() * cpu.gameBoard.size), Math.floor(Math.random() * cpu.gameBoard.size), i, orientation);
+        } while (!success);
+    }
+
+    for (let i = 0; i < player.gameBoard.size; i++) {
+        for (let j = 0; j < player.gameBoard.size; j++) {
+            const cell = document.createElement('div');
+            cell.classList.add('myShipBoardCell');
+            cell.classList.add('dropZone');
+            cell.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            }, false);
+            cell.addEventListener('dragenter', (event) => {
+                if (event.target.classList.contains('dropZone')) {
+                    event.target.classList.add('dragover');
+                }
+            });
+            cell.addEventListener('dragleave', (event) => {
+                if (event.target.classList.contains('dropZone')) {
+                    event.target.classList.remove('dragover');
+                }
+            });
+            cell.addEventListener('drop', (event) => {
+                event.preventDefault();
+                if (event.target.classList.contains('dropZone')) {
+                    event.target.classList.remove('dragover');
+                    event.target.appendChild(dragged);
+                }
+            });
+            myShipBoard.appendChild(cell);
+        }
+    }
+
+    let dragged;
+
+    for (let i = 5; i > 0; i--) {
+        const ship = document.createElement('div');
+        ship.draggable = 'true';
+        ship.classList.add('ship');
+        myShipBoard.appendChild(ship);
+        for (let j = 0; j < i; j++) {
+            const shipDiv = document.createElement('div');
+            shipDiv.classList.add('shipDiv');
+            shipDiv.classList.add('normal');
+            shipDiv.addEventListener('drag', () => {
+            });
+            shipDiv.addEventListener('touchmove', () => {
+            });
+            shipDiv.addEventListener('dragstart', () => {
+                shipDiv.classList.add('dragging');
+            });
+            shipDiv.addEventListener('touchstart', () => {
+                shipDiv.classList.add('dragging');
+            })
+            shipDiv.addEventListener('dragend', () => {
+                shipDiv.classList.remove('dragging');
+            });
+            shipDiv.addEventListener('touchend', () => {
+                shipDiv.classList.remove('dragging');
+            })
+            ship.appendChild(shipDiv);
+        }
+        ship.addEventListener('drag', () => {
+        });
+        ship.addEventListener('touchmove', () => {
+        });
+
+        ship.addEventListener('dragstart', () => {
+            dragged = ship;
+            ship.classList.add('dragging');
+        });
+        ship.addEventListener('touchstart', () => {
+            dragged = ship;
+            ship.classList.add('dragging');
+        })
+
+        ship.addEventListener('dragend', () => {
+            ship.classList.remove('dragging');
+        });
+        ship.addEventListener('touchend', () => {
+            ship.classList.remove('dragging');
+        })
+
+        ship.addEventListener('dblclick', () => {
+            if (ship.style.flexDirection === 'column') {
+                ship.style.flexDirection = 'row';
+            }
+            else {
+                ship.style.flexDirection = 'column';
+            }
+        });
+    }
+};
+
 const endGame = (winner) => {
     if (winner === 'player') {
         status.textContent = 'GAME OVER! PLAYER WINS!';
@@ -239,6 +242,20 @@ const endGame = (winner) => {
     else if (winner === 'cpu') {
         status.textContent = 'GAME OVER! CPU WINS!';
     }
-    myShipBoard.style.visibility = 'hidden';
-    enemyHitBoard.style.visibility = 'hidden';
+    const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
+    for (const cell of myShipBoardCells) {
+        cell.remove();
+    }
+    const enemyHitBoardCells = document.querySelectorAll('.enemyHitBoardCell');
+    for (const cell of enemyHitBoardCells) {
+        cell.remove();
+    }
+    startBtn.textContent = 'NEW GAME';
+    player.gameBoard.reset();
+    cpu.gameBoard.reset();
+    restart();
 }
+
+restart();
+
+export { endGame };

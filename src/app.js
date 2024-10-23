@@ -1,3 +1,5 @@
+import { endGame } from './game.js';
+
 class Ship {
     constructor(length, orientation) {
         this.length = length;
@@ -109,6 +111,14 @@ class Gameboard {
         }
         return true;
     }
+
+    reset() {
+        this.hitBoard.splice(0, this.hitBoard.length);
+        this.shipBoard.splice(0, this.shipBoard.length);
+        this.ships.splice(0, this.ships.length);
+        this.hitBoard = this.createBoard();
+        this.shipBoard = this.createBoard();
+    }
 }
 
 class Player {
@@ -207,9 +217,9 @@ class Computer extends Player {
             myShipBoardCells[x * player.gameBoard.size + y].style.opacity = '0.5';
             myShipBoardCells[x * player.gameBoard.size + y].style.transition = '1s';
         }
-        // if (player.gameBoard.allSunk()) {
-        //     endGame('cpu');
-        // }
+        if (player.gameBoard.allSunk()) {
+            endGame('cpu');
+        }
     }
 }
 
