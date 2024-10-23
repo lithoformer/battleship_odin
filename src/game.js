@@ -1,4 +1,3 @@
-import { rest } from 'lodash';
 import { Computer, Ship, Gameboard, Player } from './app.js';
 import "./style.css"
 
@@ -41,95 +40,102 @@ cpu.gameBoard = new Gameboard();
 cpu.gameBoard.hitBoard = cpu.gameBoard.createBoard();
 cpu.gameBoard.shipBoard = cpu.gameBoard.createBoard();
 
-startBtn.addEventListener('click', () => {
-    player.gameBoard.shipBoard = player.gameBoard.createBoard();
-    player.gameBoard.ships.splice(0, player.gameBoard.ships.length);
-    let begin = [];
-    let orientation = '';
-    const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
-    for (let i = 0; i < myShipBoardCells.length; i++) {
-        if (myShipBoardCells[i].querySelector('.ship')) {
-            const ship = myShipBoardCells[i].querySelector('.ship');
-            const y = i % 10;
-            const x = Math.floor(i / 10);
-            if (ship.style.flexDirection === 'row' || ship.style.flexDirection === '') {
-                orientation = 'horizontal';
-            }
-            else if (ship.style.flexDirection === 'column') {
-                orientation = 'vertical';
-            }
-            const length = ship.childNodes.length;
-            if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation) === false) {
-                status.textContent = 'INVALID SHIP POSITION!';
-                begin.push(false);
-            }
-            else if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation)) {
-                begin.push(true);
-            }
-        }
-    }
-    if (!begin.includes(false)) {
+startBtn.addEventListener('click', (event) => {
+    if (player.gameBoard.shipBoard.length === 0) {
+        player.gameBoard.shipBoard = player.gameBoard.createBoard();
+        player.gameBoard.ships.splice(0, player.gameBoard.ships.length);
+        let begin = [];
+        let orientation = '';
+        const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
         for (let i = 0; i < myShipBoardCells.length; i++) {
-            const y = i % 10;
-            const x = Math.floor(i / 10);
-            if (player.gameBoard.shipBoard[x][y] instanceof Ship) {
-                myShipBoardCells[i].style.backgroundColor = 'slategrey';
-            }
-            else {
-                myShipBoardCells[i].style.backgroundColor = 'lightblue'
-            }
-        }
-        const ships = document.querySelectorAll('.ship');
-        for (const ship of ships) {
-            ship.style.visibility = 'hidden';
-        }
-        status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
-    }
-
-    for (let i = 0; i < cpu.gameBoard.size; i++) {
-        for (let j = 0; j < cpu.gameBoard.size; j++) {
-            const cell = document.createElement('div');
-            cell.classList.add('enemyHitBoardCell');
-            enemyHitBoard.appendChild(cell);
-            cell.addEventListener('click', () => {
-                if (cpu.gameBoard.receiveAttack(i, j) === true) {
-                    if (cpu.gameBoard.hitBoard[i][j] === 0) {
-                        status.textContent = 'MISS!';
-                        cell.style.transition = '1s';
-                        cell.style.opacity = '0.5';
-                    }
-                    else if (cpu.gameBoard.hitBoard[i][j] === 1) {
-                        cell.style.transition = '1s';
-                        cell.style.backgroundColor = 'red'
-                        if (cpu.gameBoard.shipBoard[i][j].isSunk() === true) {
-                            status.textContent = 'HIT! SHIP SUNK!';
-                        } else {
-                            status.textContent = 'HIT!';
-                        }
-                    }
-                    if (cpu.gameBoard.allSunk()) {
-                        endGame('player');
-                    }
-                    else { cpu.cpuAttack(player); }
-                } else {
-                    status.textContent = 'INVALID MOVE! TRY AGAIN!';
+            if (myShipBoardCells[i].querySelector('.ship')) {
+                const ship = myShipBoardCells[i].querySelector('.ship');
+                const y = i % 10;
+                const x = Math.floor(i / 10);
+                if (ship.style.flexDirection === 'row' || ship.style.flexDirection === '') {
+                    orientation = 'horizontal';
                 }
-            });
-
-            if (cpu.gameBoard.hitBoard[i][j] === 0) {
-                cell.style.backgroundColor = 'white';
-            }
-            else if (cpu.gameBoard.hitBoard[i][j] === 1) {
-                cell.style.backgroundColor = 'red'
-            }
-            else if (cpu.gameBoard.hitBoard[i][j] === null) {
-                cell.style.backgroundColor = 'lightblue'
+                else if (ship.style.flexDirection === 'column') {
+                    orientation = 'vertical';
+                }
+                const length = ship.childNodes.length;
+                if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation) === false) {
+                    status.textContent = 'INVALID SHIP POSITION!';
+                    begin.push(false);
+                }
+                else if (player.gameBoard.placeShip(player.gameBoard.shipBoard, x, y, length, orientation)) {
+                    begin.push(true);
+                }
             }
         }
+        if (!begin.includes(false)) {
+            for (let i = 0; i < myShipBoardCells.length; i++) {
+                const y = i % 10;
+                const x = Math.floor(i / 10);
+                if (player.gameBoard.shipBoard[x][y] instanceof Ship) {
+                    myShipBoardCells[i].style.backgroundColor = 'slategrey';
+                }
+                else {
+                    myShipBoardCells[i].style.backgroundColor = 'lightblue'
+                }
+            }
+            const ships = document.querySelectorAll('.ship');
+            for (const ship of ships) {
+                ship.style.visibility = 'hidden';
+            }
+            status.textContent = 'SINK YOUR OPPONENT\'S SHIPS!';
+        }
+
+        for (let i = 0; i < cpu.gameBoard.size; i++) {
+            for (let j = 0; j < cpu.gameBoard.size; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('enemyHitBoardCell');
+                enemyHitBoard.appendChild(cell);
+                cell.addEventListener('click', () => {
+                    if (cpu.gameBoard.receiveAttack(i, j) === true) {
+                        if (cpu.gameBoard.hitBoard[i][j] === 0) {
+                            status.textContent = 'MISS!';
+                            cell.style.transition = '1s';
+                            cell.style.opacity = '0.5';
+                        }
+                        else if (cpu.gameBoard.hitBoard[i][j] === 1) {
+                            cell.style.transition = '1s';
+                            cell.style.backgroundColor = 'red'
+                            if (cpu.gameBoard.shipBoard[i][j].isSunk() === true) {
+                                status.textContent = 'HIT! SHIP SUNK!';
+                            } else {
+                                status.textContent = 'HIT!';
+                            }
+                        }
+                        if (cpu.gameBoard.allSunk()) {
+                            endGame('player');
+                        }
+                        else { cpu.cpuAttack(player); }
+                    } else {
+                        status.textContent = 'INVALID MOVE! TRY AGAIN!';
+                    }
+                });
+
+                if (cpu.gameBoard.hitBoard[i][j] === 0) {
+                    cell.style.backgroundColor = 'white';
+                }
+                else if (cpu.gameBoard.hitBoard[i][j] === 1) {
+                    cell.style.backgroundColor = 'red'
+                }
+                else if (cpu.gameBoard.hitBoard[i][j] === null) {
+                    cell.style.backgroundColor = 'lightblue'
+                }
+            }
+        }
+        event.target.style.visibility = 'hidden';
+    } else {
+        restart();
     }
 });
 
 function restart() {
+    status.textContent = 'DRAG TO PLACE YOUR SHIPS!  DOUBLE-CLICK TO CHANGE ORIENTATION';
+    startBtn.textContent = 'START GAME'
     for (let i = 1; i < 6; i++) {
         let orientation;
         let success = false;
@@ -250,10 +256,10 @@ const endGame = (winner) => {
     for (const cell of enemyHitBoardCells) {
         cell.remove();
     }
+    startBtn.style.visibility = 'visible';
     startBtn.textContent = 'NEW GAME';
     player.gameBoard.reset();
     cpu.gameBoard.reset();
-    restart();
 }
 
 restart();
