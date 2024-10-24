@@ -135,7 +135,7 @@ class Computer extends Player {
         this.AIdata = { coords: null, orientation: null };
     }
 
-    cpuAttack = (player) => {
+    cpuAttack(player) {
         let x = null;
         let y = null;
         let AIhit = false;

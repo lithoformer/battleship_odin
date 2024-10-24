@@ -1,5 +1,8 @@
-const Ship = require('./src/app.js');
-const Gameboard = require('./src/app.js');
+// const Ship = require('./app.js');
+// const Gameboard = require('./app.js');
+
+import { Ship } from './app.js';
+import { Gameboard } from './app.js';
 
 const battleShip = new Ship.Ship(5, 'horizontal');
 
