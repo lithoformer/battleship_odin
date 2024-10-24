@@ -30,7 +30,7 @@ gameContainer.appendChild(startBtn);
 const restartBtn = document.createElement('button');
 restartBtn.classList.add('btn');
 restartBtn.textContent = 'NEW GAME';
-restartBtn.style.visibility = 'hidden';
+restartBtn.style.visibility = 'collapse';
 gameContainer.appendChild(restartBtn);
 
 const enemyHitBoard = document.createElement('div');
@@ -55,6 +55,7 @@ restartBtn.addEventListener('click', (event) => {
 startBtn.addEventListener('click', (event) => {
     let begin = [];
     let orientation = '';
+    status.textContent = '';
     player.gameBoard.shipBoard = player.gameBoard.createBoard();
     player.gameBoard.ships.splice(0, player.gameBoard.ships.length);
     const myShipBoardCells = document.querySelectorAll('.myShipBoardCell');
@@ -81,7 +82,7 @@ startBtn.addEventListener('click', (event) => {
         }
     }
     if (begin.filter(item => item === true).length < 5) {
-        status.textContent = 'PLEASE PLACE ALL 5 SHIPS IN VALID POSITIONS!';
+        status.textContent += ' PLEASE PLACE ALL 5 SHIPS IN VALID POSITIONS!';
     }
     else if (!begin.includes(false) && begin.filter(item => item === true).length === 5) {
         for (let i = 0; i < myShipBoardCells.length; i++) {
@@ -146,7 +147,7 @@ startBtn.addEventListener('click', (event) => {
 });
 
 function restart() {
-    status.textContent = 'DRAG TO PLACE YOUR SHIPS!  DOUBLE-CLICK TO CHANGE ORIENTATION';
+    status.textContent = 'DRAG TO PLACE YOUR SHIPS! DOUBLE-CLICK TO CHANGE ORIENTATION';
     startBtn.textContent = 'START GAME'
     for (let i = 1; i < 6; i++) {
         let orientation;
